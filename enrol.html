@@ -1,0 +1,102 @@
+<div class="enrollment-section">
+    <h2>Enrollment Days & Contact Information</h2>
+    <p>We welcome new students every semester. Below are the upcoming enrollment days and the contacts of our registration staff.</p>
+    <div class="enrollment-info">
+        <h3>Upcoming Enrollment Days</h3>
+        <ul>
+            <li>Spring Enrollment: March 15 - April 10</li>
+            <li>Summer Enrollment: June 1 - June 20</li>
+            <li>Fall Enrollment: September 5 - September 30</li>
+        </ul>
+    </div>
+    <div class="contact-info">
+        <h3>Contact for Registration</h3>
+        <p><strong>Registrar:</strong> Jane Doe</p>
+        <p>Email: jane.doe@example.com</p>
+        <p>Phone: +123 456 7890</p>
+        <p><strong>Assistant Registrar:</strong> John Smith</p>
+        <p>Email: john.smith@example.com</p>
+        <p>Phone: +987 654 3210</p>
+    </div>
+</div>
+
+<style>
+
+.enrollment-section {
+    position: relative;
+    padding: 60px 5%;
+    text-align: center;
+    color: white;
+    margin-top: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: url('doc.jpg') center/cover no-repeat;
+}
+
+/* Dark overlay for readability */
+.enrollment-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.enrollment-section h2, 
+.enrollment-section p, 
+.enrollment-info, 
+.contact-info {
+    position: relative;
+    z-index: 2;
+}
+
+/* Styling enrollment info */
+.enrollment-info, .contact-info {
+    margin-top: 20px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(255, 255, 255, 0.9); /* Light background for readability */
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for list items */
+.enrollment-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.enrollment-info ul li {
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .enrollment-section {
+        background-attachment: scroll; /* Disable parallax effect for smaller screens */
+        padding: 40px 5%;
+    }
+
+    .enrollment-section::before {
+        background: rgba(0, 0, 0, 0.4); /* Lighter overlay for better readability */
+    }
+
+    .enrollment-info, .contact-info {
+        padding: 15px;
+    }
+}
+
+</style>

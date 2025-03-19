@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Environment</title>
+    <style>
+       html{
+        overflow-x: hidden;
+       }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background: #ece9e6;
+            justify-content: center;
+            align-items: center;
+            color: #474444c7;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #222;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: top 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            padding: 20px 5%;
+            text-align: center;
+        }
+        .class-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            overflow-y: scroll;
+        }
+        #sp{
+            color: #f0f3f0;
+            text-shadow: none;
+        }
+        .class-tab {
+            padding: 10px 30px;
+            cursor: pointer;
+            background: #ddd;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .class-tab.active {
+            background: #333;
+            color: white;
+        }
+        .class-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .class-content img {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.5s ease-in-out;
+        }
+        .class-content img:hover {
+            transform: scale(1.1) rotateY(360deg);
+        }
+        .testimony-container {
+    min-width: 800px;
+    width: 90%; /* Adjust width for smaller screens */
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin: auto; /* Centers the container horizontally */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures children elements are centered */
+    position: relative;
+    top: -2vh;
+    left: 11%;
+}
+
+.video-container {
+    width: 100%;
+    height: 400px;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-name {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f0e0e;
+}
+
+/* Ensure centering of video list */
+.video-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px;
+    white-space: nowrap;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%); /* Ensures centering */
+}
+
+/* Ensure videos in the list are centered */
+.video-list video {
+    width: 120px;
+    height: 80px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+
+.video-list video:hover {
+    transform: scale(1.1);
+}
+
+/* Styles for smaller screens */
+@media (max-width: 600px) {
+    .testimony-container {
+        width: 95%; /* Slightly smaller width for better fit */
+        max-width: 90px;
+        padding: 15px; /* Less padding to avoid extra space */
+        display: block;
+        flex-direction: column;
+        align-items: center; /* Ensure content is centered */
+        justify-content: center;
+        margin-left: -23%;
+        margin-bottom: 1vh;
+        position: relative;
+        top: 5vh;
+    }
+
+    .video-name {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: -50%;
+    color: #0f0e0e;
+}
+    .video-container {
+        height: 300px; /* Reduce height for smaller screens */
+        max-width: 45%;
+        margin-left: 6vw;
+        
+    }
+
+    .video-list {
+        flex-direction: row; /* Horizontal scrolling for smaller screens */
+        overflow-x: auto;
+        max-width: 100%;
+        padding-bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .video-list video {
+        width: 90px;
+        height: 60px;
+    }
+}
+
+/* Adjust layout for larger screens */
+@media (min-width: 1024px) {
+    .testimony-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .video-list {
+        flex-direction: column;
+        overflow-y: auto;
+        max-height: 400px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .video-list video {
+        width: 100px;
+        height: 70px;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    
+    <div class="navbar" id="navbar">
+        <img src="glor.png" alt="Logo" class="navbar-logo">
+        <span id="hup">Glory of Christ Church, kawaala</span>
+      </div>
+      
+      <style>
+      .navbar {
+        display: flex;
+        align-items: center;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 50;
+      }
+      
+      .navbar-logo {
+        width: 40px;
+        height: auto;
+        margin-right: 0.75rem;
+      }
+      
+      .navbar span {
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+      #hup{
+        color: #e9ecf0;
+      }
+      
+      @media (max-width: 600px) {
+        .navbar-logo {
+          width: 30px;
+        }
+        .navbar span {
+          font-size: 1.1rem;
+        }
+      }
+      </style>
+      
+    <script>
+        let lastScrollTop = 0;
+        window.addEventListener("scroll", function() {
+            let navbar = document.getElementById("navbar");
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                navbar.style.top = "-60px";
+            } else {
+                navbar.style.top = "0";
+            }
+            lastScrollTop = scrollTop;
+        });
+        </script>
+
+    <div class="container">
+
+        <section class="church-growth">
+            <div class="title-with-logo">
+                <img src="glot.png" alt="Church Logo" class="logo">
+                <h2 class="section-title">GROWTH <span id="sp">Department</span></h2>
+              </div>
+              
+              <style>
+              .title-with-logo {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+              }
+              span{
+                color: #0056b3;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+              }
+              
+              .logo {
+                width: 190px;
+                height: auto;
+              }
+              
+              .section-title {
+                font-size: 1.8rem;
+                margin: 0;
+              }
+              
+              @media (max-width: 600px) {
+                .logo {
+                  width: 90px;
+                  display: none;
+                }
+                .section-title {
+                  font-size: 1.5rem;
+                }
+              }
+              </style>
+              
+            <p class="section-description">
+                "<a href="https://gloryofchristug.org/" target="_blank">Glory of Christ Church Kawaala</a> Growth Department is dedicated to teaching and guiding members 
+                to grow in their faith and knowledge of Christ. Through biblical teachings and spiritual mentorship, we aim to 
+                strengthen the body of Christ and nurture a deeper relationship with God."
+            </p>            
+        </section>
+        
+        <style>
+         
+         .church-growth {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #91b9da8f;
+    max-width: 100%;
+    margin: 10vh auto 15vh auto; /* Controls both top and bottom spacing */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #0d65c4fa;
+}
+a{
+    color: #abe2b8;
+}
+
+            .section-title {
+                font-size: 2rem;
+                font-weight: bold;
+                color: #f3600a;
+                text-shadow: 2px 2px 3px rgb(255, 246, 246); /* Adjust shadow size & opacity */
+            }
+   .section-description {
+    font-size: 1.1rem;
+    color: #eee7e7;
+    max-width: 900px;
+    margin: 10px auto;
+    word-spacing: 2px;
+}
+
+            @media (max-width: 768px) {
+                .section-title {
+                    font-size: 1.8rem;
+                }
+                .church-growth {
+                    margin-top: 6vh;
+                }
+                .section-description {
+                    font-size: 1rem;
+                }
+            }
+            @media (max-width: 480px) {
+                .section-title {
+                    font-size: 1.5rem;
+                }
+                .section-description {
+                    font-size: 0.9rem;
+                }
+            }
+        </style>
+        
+        <style>
+
+.class-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.class-tab {
+    padding: 10px 15px;
+    background: #007bffd7;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.class-tab:hover {
+    background: #006ae0;
+    transform: scale(1.07);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.class-tab.active {
+    background: #0253aa;
+    animation: bounce 1s infinite;
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+
+#detailTitle{
+    color: #2e1cd3;
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: none;
+}
+h2{
+    color: #3b3937;
+    font-weight: lighter;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#detailDesc{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+/* Improve tabs on smaller screens */
+@media (max-width: 768px) {
+    .class-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        flex-wrap: nowrap;
+        display: flex;
+        padding: 10px 5px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .form-container {
+        position: relative;
+        left: -5vw;
+    }
+    
+    h2{
+        font-size: 1.1rem;
+    }
+
+    #classDesc{
+        display: none;
+    }
+
+    .class-tab {
+        flex: 0 0 auto;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .image-section {
+        position: relative;
+        top: -12vh;
+    }
+}
+#classDesc{
+        display: none;
+    }
+
+    #detailDesc{
+        color: #534d4d;
+        font-size: 1.1rem;
+    }
+
+#classTitle{
+    color: #2e1cd3;
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+            .class-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                max-width: 900px;
+                margin: auto;
+                position: relative;
+                top: -6vh;
+            }
+            .cla{
+                margin: auto;
+                position: relative;
+                left: 5%;
+            }
+        
+            .class-text {
+                flex: 1;
+                padding: 20px;
+            }
+        
+            .class-image {
+                flex: 1;
+                position: relative;
+                left: 1vw;
+                top: 11vh;
+            }
+        
+            .class-image img {
+                width: 60%;
+                border-radius: 10px;
+            }
+            #onl{
+                color: #0f0e0e;
+                font-size: .9rem;
+                font-weight: 100;
+                margin-top: -2vh;
+            }
+        
+            .join-btn {
+                background-color: #21b844;
+                color: white;
+                border: none;
+                padding: 15px 25px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+                font-size: 1rem;
+            }
+        
+            .class-details {
+                padding: 15px;
+                border-radius: 10px;
+                margin-top: -25vh;
+                text-align: center;
+                max-width: 500px;
+                margin-left: 10vw;
+            }
+        
+            .form-container {
+                display: none;
+                background: #f9f9f9;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                max-width: 400px;
+                margin: auto;
+            }
+        
+            .form-container input, .form-container select {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+        
+            .form-container button {
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        </style>
+
+<div class="tw">
+<section class="image-section">
+    <img src="stud.png" alt="Descriptive Alt Text" class="responsive-img">
+  </section>
+  
+  <style>
+  .image-section {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    margin-top: -9vh;
+  }
+  
+  .responsive-img {
+    max-width: 100%;
+    height: auto;
+  }
+  </style>
+  
+        
+  <h2 class="intro-text">
+    "At Glory of Christ Church, we equip our members with a deeper understanding of Jesus Christ through free classes led by our Church Growth team. Explore the available classes below;"
+  </h2>
+
+</div>
+  
+  <style>
+  .intro-text {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: #333;
+    position: relative;
+    left: -5vw;
+  }
+  .tw{
+    display: flex;
+    margin-bottom: 2vh;
+  }
+  
+  @media (max-width: 600px) {
+    .intro-text {
+      font-size: 1rem;
+      margin-left: 8%;
+      margin-top: -13vh;
+      line-height: 1.4;
+    }
+    .tw{
+        display: block;
+    }
+    #classTitle{
+        font-size: 1.5rem;
+    }
+    .class-details{
+        margin-top: -14vh;
+        position: relative;
+        margin-left: -10vw;
+        max-width: 250px;
+    }
+  }
+  </style>
+  
+  <div class="cla">
+        <div class="class-tabs">
+            <div class="class-tab active" onclick="showClass(1)">Encounter</div>
+            <div class="class-tab" onclick="showClass(2)">Transformation</div>
+            <div class="class-tab" onclick="showClass(3)">Membership</div>
+            <div class="class-tab" onclick="showClass(4)">Evangelism</div>
+            <div class="class-tab" onclick="showClass(5)">Christology</div>
+        </div>
+        
+        <div class="class-container" id="classContent">
+            <div class="class-text">
+                <h2 id="classTitle">encounter class</h2>
+                <p id="classDesc"></p>
+            </div>
+            <div class="class-image">
+                <img id="classImage" src="2.jpg" alt="Web Development">
+            </div>
+        </div>
+        
+        <div class="class-details" id="classDetails">
+            <h2 id="detailTitle">Encounter with Christ</h2>
+            <p id="detailDesc">Experience a deep and personal relationship with Christ.</p>
+            <button class="join-btn" onclick="openForm()">Join</button>
+        </div>
+        
+        <div class="form-container" id="joinForm">
+            <h3>Join the Class</h3>
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="text" id="phoneNumber" placeholder="Phone Number" required>
+            <select id="lineage">
+                <option value="">Select Lineage (Optional)</option>
+                <option value="No Lineage">No Lineage</option>
+                <option value="Lineage A">Lineage A</option>
+                <option value="Lineage B">Lineage B</option>
+            </select>
+            <button onclick="submitForm()">Submit</button>
+        </div>
+    </div>
+        
+        <script>
+            let currentClass = "Encounter Class";
+        
+            function showClass(classNumber) {
+                const content = [
+            { title: "Encounter Class", desc: "Experience a deep and personal relationship with Christ.", img: "2.jpg" },
+            { title: "transformation class", desc: "Grow spiritually and renew your mind through biblical teachings.", img: "3.jpg" },
+            { title: "membership class", desc: "Understand the values and beliefs of our church and become an active member.", img: "4.jpg" },
+            { title: "evangelism class", desc: "Learn how to effectively share the Gospel with others.", img: "6.jpg" },
+            { title: "christology class", desc: "Deepen your faith and become a committed leader with Christ virtues.", img: "7.jpg" }
+          ];
+
+                currentClass = content[classNumber - 1].title;
+                document.getElementById("classTitle").innerText = currentClass;
+                document.getElementById("classDesc").innerText = content[classNumber - 1].desc;
+                document.getElementById("classImage").src = content[classNumber - 1].img;
+                document.getElementById("classImage").alt = currentClass;
+                document.getElementById("detailTitle").innerText = currentClass;
+                document.getElementById("detailDesc").innerText = content[classNumber - 1].desc;
+            }
+        
+            function openForm() {
+                document.getElementById("joinForm").style.display = "block";
+            }
+        
+            function submitForm() {
+                let name = document.getElementById("fullName").value;
+                let phone = document.getElementById("phoneNumber").value;
+                let lineage = document.getElementById("lineage").value || "No Lineage";
+                
+                if (!name || !phone) {
+                    alert("Please fill in all required fields.");
+                    return;
+                }
+        
+                let message = `Hello, I would like to join the ${currentClass}.\nName: ${name}\nPhone: ${phone}\nLineage: ${lineage}`;
+                let whatsappNumber = "YOUR_WHATSAPP_NUMBER"; // Replace with your actual number
+                let whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+                
+                window.open(whatsappLink, "_blank");
+                alert("Thank you! You will be contacted soon.");
+                document.getElementById("joinForm").style.display = "none";
+            }
+        </script>
+        
+        
+        <h2 id="bk">
+            <span>Read</span> or <span>Download</span> Some Books From Our Library
+          </h2> 
+
+<div class="library">     
+    <div class="book-grid">
+        <div class="book" onclick="toggleOptions(this)">
+            <img src="bk1.jpg" alt="Book 1">
+            <div class="book-title">Encounter</div>
+            <div class="book-options">
+                <a href="book1.pdf" target="_blank">Read</a>
+                <a href="book1.pdf" download>Download</a>
+            </div>
+        </div>
+        <div class="book" onclick="toggleOptions(this)">
+            <img src="bk2.jpg" alt="Book 2">
+            <div class="book-title">Transform</div>
+            <div class="book-options">
+                <a href="book2.pdf" target="_blank">Read</a>
+                <a href="book2.pdf" download>Download</a>
+            </div>
+        </div>
+        <div class="book" onclick="toggleOptions(this)">
+            <img src="bk3.jpg" alt="Book 3">
+            <div class="book-title">Knowing Christ</div>
+            <div class="book-options">
+                <a href="book3.pdf" target="_blank">Read</a>
+                <a href="book3.pdf" download>Download</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .library {
+    padding: 50px 5%;
+    text-align: center;
+    margin-top: -4vh;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    justify-content: center;
+}
+
+.book {
+    position: relative;
+    padding: 10px;
+    border-radius: 10px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.book:hover {
+    transform: scale(1.05);
+}
+
+.book img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.book-title {
+    margin-top: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #0b0c0b;
+}
+
+.book-options {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: column;
+    background: rgb(245, 203, 15);
+    padding: 10px;
+    border-radius: 5px;
+    width: 100px;
+}
+
+.book-options a {
+    display: block;
+    color: rgb(36, 19, 194);
+    text-decoration: none;
+    margin: 5px 0;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.829);
+    border-radius: 3px;
+}
+
+.book-options a:hover {
+    background: rgb(97, 90, 190);
+    color: #f1f5f8;
+}
+
+.book:hover .book-options {
+    display: flex;
+}
+#bk{
+    margin-top: 18vh;
+    font-size: 1.7rem;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* Adjust grid for smaller screens */
+@media (max-width: 600px) {
+    .book-grid {
+        grid-template-columns: repeat(3, 1fr); /* Ensures two books per row */
+        gap: 0;
+    }
+    .library{
+        margin-top: -2vh;
+        max-height: 200px;
+        margin-bottom: 19vh;
+        overflow-x: scroll;
+    }
+#bk{
+    margin-top: 5vh;
+    font-size: 1.2rem;
+    font-family: 'Times New Roman', Times, serif;
+}
+    .book-options {
+        position: absolute;
+        display: none;
+        flex-direction: column;
+    }
+}
+
+</style>
+
+<script>
+    function toggleOptions(bookElement) {
+        let options = bookElement.querySelector(".book-options");
+        let allOptions = document.querySelectorAll(".book-options");
+        allOptions.forEach(opt => { if (opt !== options) opt.style.display = "none"; });
+        options.style.display = options.style.display === "flex" ? "none" : "flex";
+    }
+</script>
+
+<div class="enrollment-section">
+    <h2>Enrollment Days & Contact Information</h2>
+    <p>We welcome new participants into our church classes throughout the year. Below are the upcoming enrollment dates for each class and an inquiry section.</p>
+
+    <div class="enrollment-info">
+        <h3>Upcoming Registration Days</h3>
+        <ul>
+            <li><strong>Encounter Class:</strong> January 10 - February 5</li>
+            <li><strong>Transformation Class:</strong> March 15 - April 10</li>
+            <li><strong>Membership Class:</strong> June 1 - June 20</li>
+            <li><strong>Evangelism Class:</strong> September 5 - September 30</li>
+            <li><strong>Discipleship Class:</strong> November 10 - December 5</li>
+        </ul>
+    </div>
+</div>
+
+    <div class="ask-question-section">
+        <h2>Ask Any Question</h2>
+        <p>Have any questions? Feel free to ask, and we will respond as soon as possible.</p>
+    
+        <div class="question-form">
+            <textarea id="questionText" placeholder="Type your question here..." required></textarea>
+            <button onclick="sendToWhatsApp()">Send</button>
+        </div>
+    </div>
+   
+    
+    <script>
+        function sendToWhatsApp() {
+            let question = document.getElementById("questionText").value;
+            let whatsappNumber = "256123456789"; // Replace with your actual WhatsApp number
+            
+            if (!question.trim()) {
+                alert("Please enter your question before sending.");
+                return;
+            }
+    
+            let whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(question)}`;
+            window.open(whatsappLink, "_blank");
+        }
+    </script>
+    
+    <style>
+        .ask-question-section {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 900px;
+            margin: auto;
+        }
+    
+        .question-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            height: 80px;
+            margin-bottom: 10px;
+            margin-left: -.8vw;
+            font-size: 1rem;
+        }
+    
+        .question-form button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+    </style>
+    
+
+
+<style>
+
+.enrollment-section {
+    position: relative;
+    padding: 60px 5%;
+    text-align: center;
+    color: white;
+    margin-top: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: url('5.jpg') center/cover no-repeat;
+}
+
+/* Dark overlay fox r readability */
+.enrollment-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.87); /* Darker overlay */
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.enrollment-section p{
+    font-size: 1.2rem;
+}
+.enrollment-section h2, 
+.enrollment-section p, 
+.enrollment-info, 
+.contact-info {
+    position: relative;
+    z-index: 2;
+}
+
+/* Styling enrollment info */
+.enrollment-info, .contact-info {
+    margin-top: 20px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(255, 255, 255, 0.9); /* Light background for readability */
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for list items */
+.enrollment-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.enrollment-info ul li {
+    color: black;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+.enrollment-section h2{
+        color: #e6d0d0;
+    }
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .enrollment-section {
+        background-attachment: scroll; /* Disable parallax effect for smaller screens */
+        padding: 40px 5%;
+        margin-top: -18vh;
+    }
+
+    .enrollment-section::before {
+        background: rgba(0, 0, 0, 0.705); /* Lighter overlay for better readability */
+    }
+
+    .enrollment-info, .contact-info {
+        padding: 15px;
+    }
+    .question-form textarea {
+        position: relative;
+        left: -3.5%;
+    }
+    .enrollment-section h2{
+        color: #e6d0d0;
+        font-size: 1.4rem;
+    }
+    .enrollment-section p{
+        font-size: 1rem;
+    }
+}
+
+</style>
+
+<div class="into-text">
+    <h2>You can watch past<span> events</span> in the slides and some<span> testimonies!</span></h2>
+    <p>As the growth department we dwelve deep into creating an impact on people's lives and some of the testimonies will be seen below.
+       We also organize some events such as bible quiz where different lineages come together to battle in spiritual matters.
+    </p>
+</div>
+
+    <div class="charity-slider">
+        <div><img src="bib.jpg" alt="Bible quiz"></div>
+        <div><img src="bib2.jpg" alt="Bible quiz2"></div>
+        <div><img src="mir.jpg" alt="Miracle Service"></div>
+    </div>
+
+    <div class="testimony-container">
+        <div>
+            <div class="video-container">
+                <video id="mainVideo" controls>
+                    <source src="bil.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video-name" id="videoName">John Doe</div>
+        </div>
+        <div class="video-list">
+            <video src="bil.mp4" onclick="changeVideo(this, 'John Doe')"></video>
+            <video src="bil.mp4" onclick="changeVideo(this, 'Jane Smith')"></video>
+            <video src="bil.mp4" onclick="changeVideo(this, 'David Brown')"></video>
+            <video src="bil.mp4" onclick="changeVideo(this, 'Emily Davis')"></video>
+        </div>
+    </div>
+
+<style>
+    .into-text {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 10px;
+    }
+
+    .into-text h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #0b0c0b;
+    }
+
+    .into-text p {
+        font-size: 1.1rem;
+        color: #7e7777;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .into-text h2 {
+            font-size: 1.1rem;
+        }
+        .into-text p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .into-text h2 {
+            font-size: 1.1rem;
+        }
+        .into-text p {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<script>
+    function changeVideo(video, name) {
+        const mainVideo = document.getElementById('mainVideo');
+        const videoName = document.getElementById('videoName');
+        mainVideo.src = video.src;
+        mainVideo.play();
+        videoName.textContent = name;
+    }
+</script>
+
+</div>
+</div>
+
+
+<section class="invite-section">
+    <div class="invite-container">
+      <h2>Join Us & Spread the Word!</h2>
+      <p>Be part of our enriching classes—whether starting your journey or deepening your faith, there's a place for you. Let’s grow and walk with God together.</p>
+      <blockquote>“Let the wise hear and increase in learning, and the one who understands obtain guidance.” – Proverbs 1:5</blockquote>
+      <p>Share this opportunity and be a light to others. See you in class! ✨🙏</p>
+    </div>
+  </section>
+  
+  <style>
+  .invite-section {
+    padding: 2rem;
+    background: #f9f9f9;
+    display: flex;
+    justify-content: center;
+  }
+  .invite-container {
+    max-width: 700px;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 1rem;
+  }
+  .invite-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .invite-container p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+  .invite-container blockquote {
+    font-style: italic;
+    margin: 1rem 0;
+    color: #555;
+  }
+  @media (max-width: 600px) {
+    .invite-container {
+      padding: 1.5rem;
+      margin-top: -7vh;
+    }
+    .invite-container h2 {
+      font-size: 1.5rem;
+    }
+    .invite-container p, .invite-container blockquote {
+      font-size: 0.95rem;
+    }
+  }
+  </style>
+  
+
+
+<footer class="footer">
+    <p class="footer-text">&copy; 2025 Glory of Christ Church Kawaala. All rights reserved.</p>
+</footer>
+
+<style>
+    .footer {
+        text-align: center;
+        padding: 15px;
+        background: #333;
+        color: #fff;
+        margin-top: 20px;
+    }
+    .footer-text {
+        font-size: 1rem;
+    }
+    @media (max-width: 768px) {
+        .footer-text {
+            font-size: 0.9rem;
+        }
+    }
+    @media (max-width: 480px) {
+        .footer-text {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+</div>
+
+<!-- Slick CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
+
+<!-- jQuery & Slick JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+
+<style>
+/* Centering the Slider */
+.charity-slider {
+    max-width: 900px; /* Increased maximum width */
+    margin: auto;
+    padding: 10px;
+    position: relative;
+    top: -2vh;
+}
+
+/* Ensuring Image Quality */
+.charity-slider img {
+    width: 100%;
+    max-width: 900px; /* Increased max width */
+    max-height: 300px; /* Increased max height */
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* Make the image larger on smaller screens */
+@media (max-width: 768px) {
+    .charity-slider img {
+        max-height: 700px; /* Increase height for better visibility */
+        width: 100%;
+    }
+    .charity-slider{
+        max-height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .charity-slider img {
+        max-height: 750px; /* Further increase height */
+        width: 100%;
+    }
+}
+
+/* Customizing Slick Dots */
+.slick-dots {
+    bottom: 10px;
+}
+.slick-dots li button:before {
+    font-size: 12px;
+    color: #fff; /* Dot color */
+}
+.slick-dots li.slick-active button:before {
+    color: #f8b400; /* Active dot color */
+}
+
+</style>
+
+<script>
+$(document).ready(function(){
+    $('.charity-slider').slick({
+        autoplay: true,
+        autoplaySpeed: 4000,
+        dots: true,
+        arrows: false,
+        fade: false, /* Change to true if you prefer a fade effect */
+        infinite: true,
+        speed: 600,
+        adaptiveHeight: true,
+        centerMode: true,
+        variableWidth: false
+    });
+});
+</script>
+</body>
+</html>

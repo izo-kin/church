@@ -1,0 +1,107 @@
+<div class="library">
+    <h2>Library</h2>
+    <div class="book-grid">
+        <div class="book" onclick="toggleOptions(this)">
+            <img src="det.jpg" alt="Book 1">
+            <div class="book-title">Book Title 1</div>
+            <div class="book-options">
+                <a href="book1.pdf" target="_blank">Read</a>
+                <a href="book1.pdf" download>Download</a>
+            </div>
+        </div>
+        <div class="book" onclick="toggleOptions(this)">
+            <img src="doc.jpg" alt="Book 2">
+            <div class="book-title">Book Title 2</div>
+            <div class="book-options">
+                <a href="book2.pdf" target="_blank">Read</a>
+                <a href="book2.pdf" download>Download</a>
+            </div>
+        </div>
+        <div class="book" onclick="toggleOptions(this)">
+            <img src="det.jpg" alt="Book 3">
+            <div class="book-title">Book Title 3</div>
+            <div class="book-options">
+                <a href="book3.pdf" target="_blank">Read</a>
+                <a href="book3.pdf" download>Download</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .library {
+        padding: 50px 5%;
+        text-align: center;
+    }
+    .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        justify-content: center;
+    }
+    .book {
+        position: relative;
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        cursor: pointer;
+    }
+    .book:hover {
+        transform: scale(1.05);
+    }
+    .book img {
+        width: 100%;
+        border-radius: 10px;
+    }
+    .book-title {
+        margin-top: 10px;
+        font-size: 1em;
+        font-weight: bold;
+    }
+    .book-options {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        width: 100px;
+    }
+    .book-options a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        margin: 5px 0;
+        padding: 5px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+    }
+    .book-options a:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+    .book:hover .book-options {
+        display: flex;
+    }
+
+    @media (max-width: 600px) {
+        .book-options {
+            position: absolute;
+            display: none;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<script>
+    function toggleOptions(bookElement) {
+        let options = bookElement.querySelector(".book-options");
+        let allOptions = document.querySelectorAll(".book-options");
+        allOptions.forEach(opt => { if (opt !== options) opt.style.display = "none"; });
+        options.style.display = options.style.display === "flex" ? "none" : "flex";
+    }
+</script>
