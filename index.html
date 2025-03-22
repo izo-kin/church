@@ -23,14 +23,12 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: #222;
-            color: white;
             padding: 15px;
             text-align: center;
             font-size: 1.2em;
             font-weight: bold;
             transition: top 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: #e1e6e1;
         }
         .container {
             padding: 20px 5%;
@@ -205,6 +203,10 @@ video {
         width: 100px;
         height: 70px;
     }
+    .int{
+        position: relative;
+        left: -9vw;
+    }
 }
 
     </style>
@@ -237,7 +239,7 @@ video {
         font-weight: bold;
       }
       #hup{
-        color: #e9ecf0;
+        color: #232425;
       }
       
       @media (max-width: 600px) {
@@ -314,33 +316,91 @@ video {
         <style>
          
          .church-growth {
+    position: relative;
     text-align: center;
-    padding: 20px;
+    padding: 30px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px #91b9da8f;
     max-width: 100%;
-    margin: 10vh auto 15vh auto; /* Controls both top and bottom spacing */
+    margin: 10vh auto 15vh auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #0d65c4fa;
-}
-a{
-    color: #abe2b8;
+    overflow: hidden;
+    transform: translateY(30px);
+    animation: fadeInUp 1.2s ease-out forwards;
+    z-index: 0;
 }
 
-            .section-title {
-                font-size: 2rem;
-                font-weight: bold;
-                color: #f3600a;
-                text-shadow: 2px 2px 3px rgb(255, 246, 246); /* Adjust shadow size & opacity */
-            }
-   .section-description {
-    font-size: 1.1rem;
+.church-growth::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('2.jpg') center/cover no-repeat;
+    z-index: -2;
+}
+
+.church-growth::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 101, 196, 0.8); /* This is your overlay color */
+    z-index: -1;
+}
+
+
+a {
+    color: #abe2b8;
+    font-weight: bold;
+    position: relative;
+    text-decoration: none;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #abe2b8;
+    left: 0;
+    bottom: -4px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+a:hover::after {
+    transform: scaleX(1);
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #f3600a;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.section-description {
+    font-size: 1.15rem;
     color: #eee7e7;
     max-width: 900px;
-    margin: 10px auto;
+    margin: 15px auto;
     word-spacing: 2px;
+    line-height: 1.6;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
             @media (max-width: 768px) {
@@ -376,8 +436,8 @@ a{
 
 .class-tab {
     padding: 10px 15px;
-    background: #007bffd7;
-    color: white;
+    background: #10069be7;
+    color: rgb(255, 255, 255);
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
@@ -390,7 +450,7 @@ a{
 }
 
 .class-tab.active {
-    background: #0253aa;
+    background: #e61818;
     animation: bounce 1s infinite;
 }
 
@@ -417,10 +477,6 @@ h2{
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-#detailDesc{
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-
 /* Improve tabs on smaller screens */
 @media (max-width: 768px) {
     .class-tabs {
@@ -430,6 +486,14 @@ h2{
         display: flex;
         padding: 10px 5px;
         -webkit-overflow-scrolling: touch;
+        margin-left: -5vw;
+        max-width: 350px;
+    }
+   
+    #detailDesc{
+        color: #534d4d;
+        font-size: 1.1rem;
+        max-width: 240px;
     }
     .form-container {
         position: relative;
@@ -461,13 +525,18 @@ h2{
 
     #detailDesc{
         color: #534d4d;
-        font-size: 1.1rem;
+        font-size: 1.4rem;
+        max-width: 340px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        margin-left: -5%;
+        margin-top: 5vh;
     }
 
 #classTitle{
     color: #2e1cd3;
     font-size: 2.5rem;
     font-weight: 600;
+    margin-left: -15vw;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
             .class-container {
@@ -498,9 +567,13 @@ h2{
             }
         
             .class-image img {
-                width: 60%;
-                border-radius: 10px;
-            }
+               width: 120%;
+               height: 200px; /* or any height you want */
+               object-fit: cover; /* or contain depending on your needs */
+               border-radius: 10px;
+               margin-left: -5vw;
+}
+
             #onl{
                 color: #0f0e0e;
                 font-size: .9rem;
@@ -516,7 +589,8 @@ h2{
                 border-radius: 5px;
                 cursor: pointer;
                 margin-top: 10px;
-                font-size: 1rem;
+                font-size: 1.4rem;
+                margin-left: 7vw;
             }
         
             .class-details {
@@ -576,10 +650,11 @@ h2{
   }
   </style>
   
-        
+  <div class="int">     
   <h2 class="intro-text">
     "At Glory of Christ Church, we equip our members with a deeper understanding of Jesus Christ through free classes led by our Church Growth team. Explore the available classes below;"
   </h2>
+</div> 
 
 </div>
   
@@ -590,10 +665,13 @@ h2{
     text-align: center;
     max-width: 900px;
     margin: 2rem auto;
-    padding: 0 1rem;
-    color: #333;
+    padding: 10px;
+    color: #161515;
     position: relative;
-    left: -5vw;
+    font-weight: 400;
+  }
+  .int{
+    border-radius: 12px;
   }
   .tw{
     display: flex;
@@ -601,17 +679,44 @@ h2{
   }
   
   @media (max-width: 600px) {
+    .class-image img {
+               width: 70%;
+               height: 200px; /* or any height you want */
+               object-fit: cover; /* or contain depending on your needs */
+               border-radius: 10px;
+               margin-left: -13vw;
+}
+
+.intro-text {
+    color: #1f4db1;
+    font-weight: 400;
+}
+
+.join-btn {
+        font-size: 1rem;
+        margin-left: -8vw;
+    }
+#detailDesc{
+        color: #534d4d;
+        font-size: 1.1rem;
+        max-width: 160px;
+        margin-top: -4vh;
+        margin-left: 7vw;
+    }
     .intro-text {
-      font-size: 1rem;
+      font-size: .9rem;
       margin-left: 8%;
-      margin-top: -13vh;
+      margin-top: -16vh;
       line-height: 1.4;
+      margin-left: -2vw;
     }
     .tw{
         display: block;
     }
     #classTitle{
         font-size: 1.5rem;
+        margin-top: -5vh;
+        margin-left: -9vw;
     }
     .class-details{
         margin-top: -14vh;
@@ -666,7 +771,7 @@ h2{
         
             function showClass(classNumber) {
                 const content = [
-            { title: "Encounter Class", desc: "Experience a deep and personal relationship with Christ.", img: "2.jpg" },
+            { title: "encounter Class", desc: "Experience a deep and personal relationship with Christ.", img: "2.jpg" },
             { title: "transformation class", desc: "Grow spiritually and renew your mind through biblical teachings.", img: "3.jpg" },
             { title: "membership class", desc: "Understand the values and beliefs of our church and become an active member.", img: "4.jpg" },
             { title: "evangelism class", desc: "Learn how to effectively share the Gospel with others.", img: "6.jpg" },
@@ -995,10 +1100,13 @@ h2{
 
 /* Responsive tweaks */
 @media (max-width: 768px) {
+    body{
+        overflow-x: hidden;
+    }
     .enrollment-section {
         background-attachment: scroll; /* Disable parallax effect for smaller screens */
         padding: 40px 5%;
-        margin-top: -18vh;
+        margin-top: -20vh;
     }
 
     .enrollment-section::before {
